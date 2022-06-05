@@ -18,11 +18,11 @@ const AccountProperty = sequelize.define('account_property', {
 })
 
 const AccountPropertyType = sequelize.define('account_property_type', {
-  name: {type: DataTypes.STRING, unique: true }
+  name: {type: DataTypes.STRING, unique: true, allowNull: false }
 })
 
 const DataType = sequelize.define('data_type', {
-  name: {type: DataTypes.STRING, unique: true }
+  name: {type: DataTypes.STRING, unique: true, allowNull: false }
 })
 
 const ProjectAccountPropertyType = sequelize.define('project_account_property_type', {})
@@ -32,7 +32,27 @@ const ProjectProperty = sequelize.define('project_property', {
 })
 
 const ProjectPropertyType = sequelize.define('project_property_type', {
-  name: {type: DataTypes.STRING, unique: true }
+  name: {type: DataTypes.STRING, unique: true, allowNull: false }
+})
+
+const Log = sequelize.define('log', {
+  actionTime: {type: DataTypes.DATE, allowNull: false }
+})
+
+const ActionType = sequelize.define('action_type', {
+  name: {type: DataTypes.STRING, unique: true, allowNull: false }
+})
+
+const LogProperty = sequelize.define('log_property', {
+  value: {type: DataTypes.STRING }
+})
+
+const LogPropertyType = sequelize.define('log_property_type', {
+  name: {type: DataTypes.STRING, unique: true, allowNull: false }
+})
+
+const ActionStatus = sequelize.define('aciton_status', {
+  name: {type: DataTypes.STRING, unique: true, allowNull: false }
 })
 
 // Project.hasMany(ProjectAccount)
@@ -62,6 +82,27 @@ Project.belongsToMany(Account, {through: ProjectAccount})
 AccountPropertyType.belongsToMany(Project, {through: ProjectAccountPropertyType })
 Project.belongsToMany(AccountPropertyType, {through: ProjectAccountPropertyType })
 
+Log.hasOne(Account)
+Log.belongsTo(Account)
+
+Log.hasOne(Project)
+Log.belongsTo(Project)
+
+Log.hasOne(ActionType)
+Log.belongsTo(ActionType)
+
+Log.hasOne(ActionStatus)
+Log.belongsTo(ActionStatus)
+
+Log.hasMany(LogProperty)
+LogProperty.belongsTo(Log)
+
+LogProperty.hasOne(LogPropertyType)
+LogProperty.belongsTo(LogPropertyType)
+
+LogPropertyType.hasOne(DataType)
+LogPropertyType.belongsTo(DataType)
+
 module.exports = {
   Project,
   Account,
@@ -71,5 +112,10 @@ module.exports = {
   DataType,
   ProjectAccountPropertyType,
   ProjectProperty,
-  ProjectPropertyType
+  ProjectPropertyType,
+  Log,
+  ActionType,
+  ActionStatus,
+  LogProperty,
+  LogPropertyType
 }
