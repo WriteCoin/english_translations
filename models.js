@@ -51,9 +51,19 @@ const LogPropertyType = sequelize.define('log_property_type', {
   name: {type: DataTypes.STRING, unique: true, allowNull: false }
 })
 
+const ActionTypeLogPropertyType = sequelize.define('action_type_log_property_type', {})
+
 const ActionStatus = sequelize.define('aciton_status', {
   name: {type: DataTypes.STRING, unique: true, allowNull: false }
 })
+
+const ProjectType = sequelize.define('project_type', {
+  name: {type: DataTypes.STRING, unique: true, allowNull: false }
+})
+
+const ProjectTypeProject = sequelize.define('project_type_project', {})
+
+const ActionTypeProjectType = sequelize.define('action_type_project_type', {})
 
 // Project.hasMany(ProjectAccount)
 // ProjectAccount.belongsTo(Project)
@@ -103,6 +113,15 @@ LogProperty.belongsTo(LogPropertyType)
 LogPropertyType.hasOne(DataType)
 LogPropertyType.belongsTo(DataType)
 
+LogPropertyType.belongsToMany(ActionType, {through: ActionTypeLogPropertyType })
+ActionType.belongsToMany(LogPropertyType, {through: ActionTypeLogPropertyType })
+
+Project.belongsToMany(ProjectType, {through: ProjectTypeProject })
+ProjectType.belongsToMany(Project, {through: ProjectTypeProject })
+
+ProjectType.belongsToMany(ActionType, {through: ActionTypeProjectType })
+ActionType.belongsToMany(ProjectType, {through: ActionTypeProjectType })
+
 module.exports = {
   Project,
   Account,
@@ -117,5 +136,9 @@ module.exports = {
   ActionType,
   ActionStatus,
   LogProperty,
-  LogPropertyType
+  LogPropertyType,
+  ActionTypeLogPropertyType,
+  ProjectType,
+  ProjectTypeProject,
+  ActionTypeProjectType
 }
