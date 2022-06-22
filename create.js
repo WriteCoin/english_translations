@@ -3,7 +3,7 @@ const models = require('./models')
 
 async function create() {
   try {
-    await sequelize.sync()
+    await sequelize.sync({ force: true })
   } catch (e) {
     console.log("Create database error", e.message)
   }
